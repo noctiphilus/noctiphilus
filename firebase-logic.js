@@ -1,16 +1,16 @@
 // Import Firebase functions from CDN
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // TODO: User must replace this with their own config
 const firebaseConfig = {
-  apiKey: "AIzaSyCFKzPiOA1Pbv2IjcU9PkRq-rjoIWXFw5Q",
-  authDomain: "noctiphilusblog.firebaseapp.com",
-  projectId: "noctiphilusblog",
-  storageBucket: "noctiphilusblog.firebasestorage.app",
-  messagingSenderId: "287861825181",
-  appId: "1:287861825181:web:4bac1c84b2decb8a213e74"
-}
+    apiKey: "TU_API_KEY",
+    authDomain: "TU_PROYECTO.firebaseapp.com",
+    projectId: "TU_PROYECTO",
+    storageBucket: "TU_PROYECTO.appspot.com",
+    messagingSenderId: "NUMERO",
+    appId: "ID_APP"
+};
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -21,10 +21,10 @@ export async function createPost(postData) {
     try {
         const docRef = await addDoc(collection(db, "posts"), {
             title: postData.title,
-            image: postData.image,
-            content: postData.content,
+            image: postData.image || "", // Optional
+            content: postData.content, // HTML Support
             date: postData.date,
-            timestamp: Date.now() // For easier sorting
+            timestamp: Date.now()
         });
         console.log("Document written with ID: ", docRef.id);
         return docRef.id;
@@ -48,5 +48,28 @@ export async function getPosts() {
         console.error("Error getting documents: ", e);
         // If error (likely config missing), return empty to handle gracefully
         return [];
+    }
+}
+
+// Function to delete a post
+export async function deletePost(postId) {
+    try {
+        await deleteDoc(doc(db, "posts", postId));
+        console.log("Document deleted with ID: ", postId);
+    } catch (e) {
+        console.error("Error deleting document: ", e);
+        throw e;
+    }
+}
+
+// Function to update a post
+export async function updatePost(postId, newData) {
+    try {
+        const postRef = doc(db, "posts", postId);
+        await updateDoc(postRef, newData);
+        console.log("Document updated with ID: ", postId);
+    } catch (e) {
+        console.error("Error updating document: ", e);
+        throw e;
     }
 }
