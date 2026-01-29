@@ -3,7 +3,6 @@ const translations = {
         home: "Inicio",
         blog: "Blog",
         multimedia: "Multimedia",
-        publications: "Publicaciones",
         about: "Sobre mí",
         contact: "Contacto",
         toggleLang: "EN",
@@ -21,16 +20,6 @@ const translations = {
         // Multimedia Page
         media_title: "Multimedia",
         media_desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        // Publications Page
-        pub_title: "Publicaciones",
-        pub_item_1_title: "Estudio sobre el Minimalismo",
-        pub_item_1_desc: "Publicado en Design Journal, 2025.",
-        pub_read_more: "Leer más",
-        pub_item_2_title: "La Noche y el Arte",
-        pub_item_2_desc: "Ensayo fotográfico colaborativo.",
-        pub_view_project: "Ver proyecto",
-        pub_item_3_title: "Noctiphilus: El Origen",
-        pub_item_3_desc: "Artículo destacado en medium.",
         // About Page
         about_title: "Sobre mí",
         about_p1: "Soy un creador enfocado en la simplicidad y el diseño nocturno. Busco la elegancia en la ausencia de luz y la claridad en el espacio negativo.",
@@ -47,7 +36,6 @@ const translations = {
         home: "Home",
         blog: "Blog",
         multimedia: "Multimedia",
-        publications: "Publications",
         about: "About Me",
         contact: "Contact",
         toggleLang: "ES",
@@ -65,16 +53,6 @@ const translations = {
         // Multimedia Page
         media_title: "Multimedia",
         media_desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        // Publications Page
-        pub_title: "Publications",
-        pub_item_1_title: "Study on Minimalism",
-        pub_item_1_desc: "Published in Design Journal, 2025.",
-        pub_read_more: "Read more",
-        pub_item_2_title: "The Night and Art",
-        pub_item_2_desc: "Collaborative photographic essay.",
-        pub_view_project: "View project",
-        pub_item_3_title: "Noctiphilus: The Origin",
-        pub_item_3_desc: "Featured article on Medium.",
         // About Page
         about_title: "About Me",
         about_p1: "I am a creator focused on simplicity and nocturnal design. I seek elegance in the absence of light and clarity in negative space.",
@@ -200,14 +178,20 @@ themeToggleBtn.addEventListener('click', () => {
         moonIcon.style.display = 'none';
     }
 
-    // Save preference (optional, but requested implicitly by "features")
+    // Save preference
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
 });
 
-// Load Preference
+// Load Preference (Default to Dark)
 const savedTheme = localStorage.getItem('theme');
-if (savedTheme === 'dark') {
+// If saved is 'dark' OR if it's null (first visit), apply dark mode
+if (savedTheme === 'dark' || savedTheme === null) {
     document.body.classList.add('dark-mode');
     sunIcon.style.display = 'none';
     moonIcon.style.display = 'block';
+} else {
+    // It is explicitly 'light'
+    document.body.classList.remove('dark-mode');
+    sunIcon.style.display = 'block';
+    moonIcon.style.display = 'none';
 }

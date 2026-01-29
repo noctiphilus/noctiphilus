@@ -18,7 +18,6 @@
                 <li><a href="index.html" data-translate="home">Inicio</a></li>
                 <li><a href="blog.html" data-translate="blog">Blog</a></li>
                 <li><a href="multimedia.html" data-translate="multimedia">Multimedia</a></li>
-                <li><a href="publications.html" data-translate="publications">Publicaciones</a></li>
                 <li><a href="about.html" data-translate="about">Sobre mí</a></li>
                 <li><a href="contact.html" data-translate="contact">Contacto</a></li>
                 <li class="mobile-only"><a href="#" id="mobile-lang-toggle">EN</a></li>
@@ -60,30 +59,62 @@
         <div class="content-container">
             <h1 class="page-title" data-translate="blog_title">Blog</h1>
 
-            <div class="article-item">
-                <span class="article-date" data-translate="blog_date_1">29 Enero 2026</span>
-                <h2 class="article-title" data-translate="blog_title_1">Reflexiones Nocturnas</h2>
-                <p data-translate="blog_text_1">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua.</p>
-            </div>
-
-            <div class="article-item">
-                <span class="article-date" data-translate="blog_date_2">15 Enero 2026</span>
-                <h2 class="article-title" data-translate="blog_title_2">Minimalismo Digital</h2>
-                <p data-translate="blog_text_2">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                    ut aliquip ex ea commodo consequat.</p>
-            </div>
-
-            <div class="article-item">
-                <span class="article-date" data-translate="blog_date_3">01 Enero 2026</span>
-                <h2 class="article-title" data-translate="blog_title_3">El Comienzo</h2>
-                <p data-translate="blog_text_3">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                    dolore eu fugiat nulla pariatur.</p>
+            <!-- Dynamic Contatiner -->
+            <div id="blog-feed">
+                <p style="text-align: center; opacity: 0.5;">Cargando artículos...</p>
             </div>
         </div>
     </main>
 
     <script src="script.js"></script>
+    <script type="module">
+        import { getPosts } from './firebase-logic.js';
+
+        async function loadBlog() {
+            const feed = document.getElementById('blog-feed');
+            const posts = await getPosts();
+
+            if (posts.length === 0) {
+                feed.innerHTML = '<p style="text-align: center; opacity: 0.5;">No hay artículos publicados aún (o falta configuración de Firebase).</p>';
+                return;
+            }
+
+            feed.innerHTML = ''; // Clear loader
+
+            posts.forEach(post => {
+                // Dates formatting
+                const d = new Date(post.date);
+                const dateStr = d.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+
+                const article = document.createElement('div');
+                article.className = 'article-item';
+
+                // Construct HTML safely
+                let imageHTML = '';
+                if (post.image && post.image.startsWith('http')) {
+                    imageHTML = `<img src="${post.image}" alt="Imagen del post" style="width:100%; max-height: 300px; object-fit: cover; margin-bottom: 1rem; border-radius: 4px; filter: grayscale(100%); transition: filter 0.3s;">`;
+                }
+
+                article.innerHTML = `
+                    <span class="article-date">${dateStr}</span>
+                    <h2 class="article-title">${post.title}</h2>
+                    ${imageHTML}
+                    <div class="article-content" style="white-space: pre-wrap; opacity: 0.9; line-height: 1.6;">${post.content}</div>
+                `;
+
+                // Add hover effect for image grayscale
+                if (imageHTML) {
+                    const img = article.querySelector('img');
+                    article.addEventListener('mouseenter', () => img.style.filter = 'grayscale(0%)');
+                    article.addEventListener('mouseleave', () => img.style.filter = 'grayscale(100%)');
+                }
+
+                feed.appendChild(article);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', loadBlog);
+    </script>
 </body>
 
 </html>
