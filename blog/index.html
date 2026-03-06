@@ -1,120 +1,203 @@
 <!DOCTYPE html>
-<html lang="es">
-
+<html lang="es" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog - NOCTIPHILUS</title>
-    <link rel="stylesheet" href="../style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — NOCTIPHILUS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #ffffff; --fg: #0a0a0a; --muted: #888; --nav-bg: rgba(255,255,255,0.75); --border: rgba(0,0,0,0.08); --g1: rgba(210,210,220,0.45); --g2: rgba(180,190,210,0.3); --g3: rgba(220,215,210,0.35); --transition: 0.4s cubic-bezier(0.4,0,0.2,1); }
+    [data-theme="dark"] { --bg: #080808; --fg: #f0f0f0; --muted: #999; --nav-bg: rgba(8,8,8,0.82); --border: rgba(255,255,255,0.07); --g1: rgba(30,30,45,0.8); --g2: rgba(20,25,40,0.7); --g3: rgba(35,28,38,0.8); }
+    html, body { min-height: 100%; font-family: 'Jost', sans-serif; background: var(--bg); color: var(--fg); transition: background var(--transition), color var(--transition); overflow-x: hidden; }
+    .bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .orb { position: absolute; border-radius: 50%; filter: blur(80px); }
+    .orb-1 { width: 55vw; height: 55vw; top: -15%; left: -10%; background: radial-gradient(circle, var(--g1) 0%, transparent 70%); animation: drift1 18s ease-in-out infinite alternate; }
+    .orb-2 { width: 45vw; height: 45vw; bottom: -10%; right: -5%; background: radial-gradient(circle, var(--g2) 0%, transparent 70%); animation: drift2 22s ease-in-out infinite alternate; }
+    .orb-3 { width: 35vw; height: 35vw; top: 40%; left: 55%; background: radial-gradient(circle, var(--g3) 0%, transparent 70%); animation: drift3 15s ease-in-out infinite alternate; }
+    @keyframes drift1 { from { transform: translate(0,0) scale(1); } to { transform: translate(8vw,6vh) scale(1.08); } }
+    @keyframes drift2 { from { transform: translate(0,0) scale(1); } to { transform: translate(-6vw,-8vh) scale(1.05); } }
+    @keyframes drift3 { from { transform: translate(0,0) scale(1); } to { transform: translate(-5vw,5vh) scale(0.95); } }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(1.5rem,5vw,4rem); height: 60px; background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); transition: background var(--transition), border-color var(--transition); }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 1rem; letter-spacing: 0.35em; color: var(--fg); text-decoration: none; opacity: 0.5; transition: opacity 0.3s; }
+    .nav-logo:hover { opacity: 1; }
+    .nav-links { display: flex; list-style: none; gap: clamp(1.2rem,3vw,2.5rem); }
+    .nav-links a { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; color: var(--muted); font-weight: 300; transition: color 0.3s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--fg); }
+    .nav-right { display: flex; align-items: center; gap: 1rem; }
+    .lang-btn { background: none; border: none; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); font-weight: 300; padding: 0; transition: color 0.3s; }
+    .lang-btn:hover { color: var(--fg); }
+    .theme-toggle { width: 36px; height: 20px; background: transparent; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; position: relative; transition: border-color 0.3s; outline: none; flex-shrink: 0; }
+    .theme-toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--muted); transition: transform 0.3s, background 0.3s; }
+    [data-theme="dark"] .theme-toggle::after { transform: translateX(16px); background: var(--fg); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 1px; background: var(--fg); transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+    .mobile-menu { display: none; position: fixed; top: 60px; left: 0; right: 0; background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 1.5rem clamp(1.5rem,5vw,4rem); z-index: 99; flex-direction: column; gap: 1.2rem; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a, .mobile-menu button { font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; color: var(--muted); font-weight: 300; transition: color 0.3s; background: none; border: none; cursor: pointer; font-family: 'Jost', sans-serif; padding: 0; text-align: left; }
+    .mobile-menu a:hover { color: var(--fg); }
+    @media (max-width: 680px) { .nav-links, .lang-btn { display: none; } .hamburger { display: flex; } }
+
+    /* PAGE */
+    main { position: relative; z-index: 1; min-height: 100dvh; padding: 100px clamp(1.5rem,6vw,6rem) 4rem; max-width: 900px; margin: 0 auto; }
+    .blog-header { margin-bottom: 3.5rem; animation: fadeUp 0.8s both; }
+    .page-label { font-size: 0.62rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--muted); font-weight: 200; display: block; margin-bottom: 0.8rem; }
+    .blog-title { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(2rem,5vw,3.5rem); letter-spacing: 0.1em; color: var(--fg); }
+
+    /* Posts list */
+    #posts-container { display: flex; flex-direction: column; }
+    .post-item { border-top: 1px solid var(--border); padding: 2rem 0; display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start; cursor: pointer; transition: border-color 0.3s; animation: fadeUp 0.6s both; text-decoration: none; color: inherit; }
+    .post-item:hover .post-item-title { opacity: 0.6; }
+    .post-item-date { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); font-weight: 200; margin-bottom: 0.6rem; display: block; }
+    .post-item-title { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(1.3rem,3vw,2rem); letter-spacing: 0.05em; color: var(--fg); transition: opacity 0.3s; line-height: 1.2; }
+    .post-item-excerpt { font-size: 0.78rem; color: var(--muted); line-height: 1.7; margin-top: 0.8rem; font-weight: 300; max-width: 600px; }
+    .post-item-arrow { font-size: 1rem; color: var(--muted); transition: transform 0.3s, color 0.3s; margin-top: 0.3rem; }
+    .post-item:hover .post-item-arrow { transform: translateX(4px); color: var(--fg); }
+
+    /* Loading / empty */
+    .posts-loading { padding: 3rem 0; font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); }
+    .posts-empty { padding: 3rem 0; font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); border-top: 1px solid var(--border); }
+
+    /* Post modal */
+    .post-modal { display: none; position: fixed; inset: 0; z-index: 200; background: var(--bg); overflow-y: auto; }
+    .post-modal.open { display: block; }
+    .post-modal-inner { max-width: 680px; margin: 0 auto; padding: 100px clamp(1.5rem,5vw,4rem) 4rem; }
+    .post-modal-back { background: none; border: none; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); padding: 0; transition: color 0.3s; margin-bottom: 3rem; display: flex; align-items: center; gap: 0.5rem; }
+    .post-modal-back:hover { color: var(--fg); }
+    .post-modal-date { font-size: 0.6rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--muted); font-weight: 200; display: block; margin-bottom: 1rem; }
+    .post-modal-title { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(2rem,6vw,3.5rem); letter-spacing: 0.08em; color: var(--fg); margin-bottom: 2rem; line-height: 1.1; }
+    .post-modal-divider { width: 30px; height: 1px; background: var(--muted); opacity: 0.35; margin-bottom: 2rem; }
+    .post-modal-content { font-size: 0.88rem; line-height: 1.9; color: var(--muted); font-weight: 300; }
+    .post-modal-content p { margin-bottom: 1.2rem; }
+    .post-modal-img { width: 100%; margin-bottom: 2rem; display: block; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
 </head>
-
 <body>
-    <header>
-        <nav>
-            <ul id="menu">
-                <li><a href="/" data-translate="home">Inicio</a></li>
-                <li><a href="/blog" data-translate="blog">Blog</a></li>
-                <li><a href="/multimedia" data-translate="multimedia">Multimedia</a></li>
-                <li><a href="/about" data-translate="about">Sobre mí</a></li>
-                <li><a href="/contact" data-translate="contact">Contacto</a></li>
-                <li class="mobile-only"><a href="#" id="mobile-lang-toggle">EN</a></li>
-            </ul>
-        </nav>
-        <div class="controls">
-            <button id="lang-toggle" class="desktop-only" aria-label="Toggle Language">EN</button>
-            <button id="theme-toggle" aria-label="Toggle Dark Mode">
-                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="5" />
-                    <line x1="12" y1="1" x2="12" y2="3" />
-                    <line x1="12" y1="21" x2="12" y2="23" />
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                    <line x1="1" y1="12" x2="3" y2="12" />
-                    <line x1="21" y1="12" x2="23" y2="12" />
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                </svg>
-                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    style="display:none;">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-            </button>
-            <button id="menu-toggle" aria-label="Toggle Menu" class="mobile-only">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="3" y1="12" x2="21" y2="12" />
-                    <line x1="3" y1="6" x2="21" y2="6" />
-                    <line x1="3" y1="18" x2="21" y2="18" />
-                </svg>
-            </button>
-        </div>
-    </header>
+  <div class="bg-canvas" aria-hidden="true">
+    <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+  </div>
+  <nav>
+    <a href="/" class="nav-logo">N</a>
+    <ul class="nav-links">
+      <li><a href="/" data-translate="home">Inicio</a></li>
+      <li><a href="/about" data-translate="about">Sobre mí</a></li>
+      <li><a href="/multimedia" data-translate="multimedia">Galería</a></li>
+      <li><a href="/blog" class="active" data-translate="blog">Blog</a></li>
+      <li><a href="/contact" data-translate="contact">Contacto</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="lang-btn" id="lang-toggle">EN</button>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Tema"></button>
+      <button class="hamburger" id="hamburger" aria-label="Menú"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/" data-translate="home">Inicio</a>
+    <a href="/about" data-translate="about">Sobre mí</a>
+    <a href="/multimedia" data-translate="multimedia">Galería</a>
+    <a href="/blog" data-translate="blog">Blog</a>
+    <a href="/contact" data-translate="contact">Contacto</a>
+    <button class="lang-btn" id="mobile-lang-toggle">EN</button>
+  </div>
 
-    <main>
-        <div class="content-container">
-            <h1 class="page-title" data-translate="blog_title">Blog</h1>
+  <main>
+    <div class="blog-header">
+      <span class="page-label">Blog</span>
+      <h1 class="blog-title" data-translate="blog_heading">Escritos</h1>
+    </div>
+    <div id="posts-container">
+      <div class="posts-loading" data-translate="loading">Cargando...</div>
+    </div>
+  </main>
 
-            <!-- Dynamic Contatiner -->
-            <div id="blog-feed">
-                <p style="text-align: center; opacity: 0.5;">Cargando artículos...</p>
-            </div>
-        </div>
-    </main>
+  <!-- Post modal -->
+  <div class="post-modal" id="postModal">
+    <div class="post-modal-inner">
+      <button class="post-modal-back" id="postModalBack">← <span data-translate="back">Volver</span></button>
+      <span class="post-modal-date" id="modalDate"></span>
+      <h1 class="post-modal-title" id="modalTitle"></h1>
+      <div class="post-modal-divider"></div>
+      <img class="post-modal-img" id="modalImg" src="" alt="" style="display:none" />
+      <div class="post-modal-content" id="modalContent"></div>
+    </div>
+  </div>
 
-    <script src="../script.js"></script>
-    <script type="module">
-        import { getPosts } from '../firebase-logic.js';
+  <script type="module">
+    import { getPosts } from '../firebase-logic.js';
 
-        async function loadBlog() {
-            const feed = document.getElementById('blog-feed');
-            const posts = await getPosts();
+    const translations = {
+      es: { home:"Inicio", about:"Sobre mí", multimedia:"Galería", blog:"Blog", contact:"Contacto", toggleLang:"EN", blog_heading:"Escritos", loading:"Cargando...", no_posts:"Aún no hay entradas.", back:"Volver" },
+      en: { home:"Home", about:"About Me", multimedia:"Gallery", blog:"Blog", contact:"Contact", toggleLang:"ES", blog_heading:"Writings", loading:"Loading...", no_posts:"No posts yet.", back:"Back" }
+    };
+    let currentLang = localStorage.getItem('lang') || 'es';
+    function setLanguage(lang) {
+      currentLang = lang; document.documentElement.lang = lang; localStorage.setItem('lang', lang);
+      document.querySelectorAll('[data-translate]').forEach(el => { const k = el.getAttribute('data-translate'); if (translations[lang]?.[k]) el.textContent = translations[lang][k]; });
+      document.getElementById('lang-toggle').textContent = translations[lang].toggleLang;
+      const mob = document.getElementById('mobile-lang-toggle'); if (mob) mob.textContent = translations[lang].toggleLang;
+    }
+    function toggleLanguage() { setLanguage(currentLang === 'es' ? 'en' : 'es'); }
+    document.getElementById('lang-toggle').addEventListener('click', toggleLanguage);
+    document.getElementById('mobile-lang-toggle')?.addEventListener('click', toggleLanguage);
+    const html = document.documentElement;
+    html.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+    document.getElementById('theme-toggle').addEventListener('click', () => { const n = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light'; html.setAttribute('data-theme', n); localStorage.setItem('theme', n); });
+    const hamburger = document.getElementById('hamburger'); const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); mobileMenu.classList.toggle('open'); });
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { hamburger.classList.remove('open'); mobileMenu.classList.remove('open'); }));
+    setLanguage(currentLang);
 
-            if (posts.length === 0) {
-                feed.innerHTML = '<p style="text-align: center; opacity: 0.5;">No hay artículos publicados aún (o falta configuración de Firebase).</p>';
-                return;
-            }
-
-            feed.innerHTML = ''; // Clear loader
-
-            posts.forEach(post => {
-                // Dates formatting
-                const d = new Date(post.date);
-                const dateStr = d.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-
-                const article = document.createElement('div');
-                article.className = 'article-item';
-
-                // Construct HTML safely
-                let imageHTML = '';
-                if (post.image && post.image.startsWith('http')) {
-                    imageHTML = `<img src="${post.image}" alt="Imagen del post" style="width:100%; max-height: 300px; object-fit: cover; margin-bottom: 1rem; border-radius: 4px; filter: grayscale(100%); transition: filter 0.3s;">`;
-                }
-
-                article.innerHTML = `
-                    <span class="article-date">${dateStr}</span>
-                    <h2 class="article-title">${post.title}</h2>
-                    ${imageHTML}
-                    <div class="article-content" style="white-space: pre-wrap; opacity: 0.9; line-height: 1.6;">${post.content}</div>
-                `;
-
-                // Add hover effect for image grayscale
-                if (imageHTML) {
-                    const img = article.querySelector('img');
-                    article.addEventListener('mouseenter', () => img.style.filter = 'grayscale(0%)');
-                    article.addEventListener('mouseleave', () => img.style.filter = 'grayscale(100%)');
-                }
-
-                feed.appendChild(article);
-            });
+    // Load posts
+    async function loadPosts() {
+      const container = document.getElementById('posts-container');
+      try {
+        const posts = await getPosts();
+        container.innerHTML = '';
+        if (!posts.length) {
+          container.innerHTML = `<div class="posts-empty">${translations[currentLang].no_posts}</div>`;
+          return;
         }
+        posts.forEach((post, i) => {
+          const item = document.createElement('div');
+          item.className = 'post-item';
+          item.style.animationDelay = `${i * 0.08}s`;
+          item.innerHTML = `
+            <div>
+              <span class="post-item-date">${post.date || ''}</span>
+              <div class="post-item-title">${post.title}</div>
+              <div class="post-item-excerpt">${post.content ? post.content.replace(/<[^>]*>/g,'').slice(0,120) + '…' : ''}</div>
+            </div>
+            <span class="post-item-arrow">→</span>`;
+          item.addEventListener('click', () => openPost(post));
+          container.appendChild(item);
+        });
+      } catch(e) {
+        container.innerHTML = `<div class="posts-empty">No se pudieron cargar las entradas.</div>`;
+      }
+    }
 
-        document.addEventListener('DOMContentLoaded', loadBlog);
-    </script>
+    function openPost(post) {
+      document.getElementById('modalDate').textContent = post.date || '';
+      document.getElementById('modalTitle').textContent = post.title;
+      const img = document.getElementById('modalImg');
+      if (post.image) { img.src = post.image; img.style.display = 'block'; } else { img.style.display = 'none'; }
+      document.getElementById('modalContent').innerHTML = post.content || '';
+      document.getElementById('postModal').classList.add('open');
+      document.getElementById('postModal').scrollTop = 0;
+    }
+
+    document.getElementById('postModalBack').addEventListener('click', () => {
+      document.getElementById('postModal').classList.remove('open');
+    });
+
+    loadPosts();
+  </script>
 </body>
-
 </html>
