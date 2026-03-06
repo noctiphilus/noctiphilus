@@ -1,79 +1,165 @@
 <!DOCTYPE html>
-<html lang="es">
-
+<html lang="es" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sobre mí - NOCTIPHILUS</title>
-    <link rel="stylesheet" href="../style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sobre mí — NOCTIPHILUS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #ffffff; --fg: #0a0a0a; --muted: #888;
+      --nav-bg: rgba(255,255,255,0.75); --border: rgba(0,0,0,0.08);
+      --g1: rgba(210,210,220,0.45); --g2: rgba(180,190,210,0.3); --g3: rgba(220,215,210,0.35);
+      --transition: 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+    [data-theme="dark"] {
+      --bg: #080808; --fg: #f0f0f0; --muted: #999;
+      --nav-bg: rgba(8,8,8,0.82); --border: rgba(255,255,255,0.07);
+      --g1: rgba(30,30,45,0.8); --g2: rgba(20,25,40,0.7); --g3: rgba(35,28,38,0.8);
+    }
+    html, body { min-height: 100%; font-family: 'Jost', sans-serif; background: var(--bg); color: var(--fg); transition: background var(--transition), color var(--transition); overflow-x: hidden; }
+
+    /* BG */
+    .bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .orb { position: absolute; border-radius: 50%; filter: blur(80px); }
+    .orb-1 { width: 55vw; height: 55vw; top: -15%; left: -10%; background: radial-gradient(circle, var(--g1) 0%, transparent 70%); animation: drift1 18s ease-in-out infinite alternate; }
+    .orb-2 { width: 45vw; height: 45vw; bottom: -10%; right: -5%; background: radial-gradient(circle, var(--g2) 0%, transparent 70%); animation: drift2 22s ease-in-out infinite alternate; }
+    .orb-3 { width: 35vw; height: 35vw; top: 40%; left: 55%; background: radial-gradient(circle, var(--g3) 0%, transparent 70%); animation: drift3 15s ease-in-out infinite alternate; }
+    @keyframes drift1 { from { transform: translate(0,0) scale(1); } to { transform: translate(8vw,6vh) scale(1.08); } }
+    @keyframes drift2 { from { transform: translate(0,0) scale(1); } to { transform: translate(-6vw,-8vh) scale(1.05); } }
+    @keyframes drift3 { from { transform: translate(0,0) scale(1); } to { transform: translate(-5vw,5vh) scale(0.95); } }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(1.5rem,5vw,4rem); height: 60px; background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); transition: background var(--transition), border-color var(--transition); }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 1rem; letter-spacing: 0.35em; color: var(--fg); text-decoration: none; opacity: 0.5; transition: opacity 0.3s; }
+    .nav-logo:hover { opacity: 1; }
+    .nav-links { display: flex; list-style: none; gap: clamp(1.2rem,3vw,2.5rem); }
+    .nav-links a { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; color: var(--muted); font-weight: 300; transition: color 0.3s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--fg); }
+    .nav-right { display: flex; align-items: center; gap: 1rem; }
+    .lang-btn { background: none; border: none; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); font-weight: 300; padding: 0; transition: color 0.3s; }
+    .lang-btn:hover { color: var(--fg); }
+    .theme-toggle { width: 36px; height: 20px; background: transparent; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; position: relative; transition: border-color 0.3s; outline: none; flex-shrink: 0; }
+    .theme-toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--muted); transition: transform 0.3s, background 0.3s; }
+    [data-theme="dark"] .theme-toggle::after { transform: translateX(16px); background: var(--fg); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 1px; background: var(--fg); transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+    .mobile-menu { display: none; position: fixed; top: 60px; left: 0; right: 0; background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 1.5rem clamp(1.5rem,5vw,4rem); z-index: 99; flex-direction: column; gap: 1.2rem; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a, .mobile-menu button { font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; color: var(--muted); font-weight: 300; transition: color 0.3s; background: none; border: none; cursor: pointer; font-family: 'Jost', sans-serif; padding: 0; text-align: left; }
+    .mobile-menu a:hover { color: var(--fg); }
+    @media (max-width: 680px) { .nav-links, .lang-btn { display: none; } .hamburger { display: flex; } }
+
+    /* PAGE */
+    main { position: relative; z-index: 1; min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 100px clamp(1.5rem,8vw,8rem) 4rem; }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; max-width: 1000px; width: 100%; animation: fadeUp 1s cubic-bezier(0.4,0,0.2,1) both; }
+    .about-left { display: flex; flex-direction: column; gap: 0; }
+    .page-label { font-size: 0.62rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--muted); font-weight: 200; margin-bottom: 1.5rem; }
+    .about-title { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(2.5rem,6vw,4.5rem); letter-spacing: 0.1em; line-height: 1; color: var(--fg); margin-bottom: 2rem; }
+    .about-divider { width: 30px; height: 1px; background: var(--muted); opacity: 0.35; margin-bottom: 2rem; }
+    .about-text { font-size: 0.82rem; line-height: 1.9; color: var(--muted); font-weight: 300; letter-spacing: 0.03em; }
+    .about-text p + p { margin-top: 1.2rem; }
+    .about-right { display: flex; flex-direction: column; gap: 2rem; }
+    .stat-item { border-top: 1px solid var(--border); padding-top: 1.5rem; }
+    .stat-number { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; color: var(--fg); letter-spacing: 0.05em; line-height: 1; }
+    .stat-label { font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); font-weight: 200; margin-top: 0.4rem; }
+    @media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; gap: 3rem; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
 </head>
-
 <body>
-    <header>
-        <nav>
-            <ul id="menu">
-                <li><a href="/" data-translate="home">Inicio</a></li>
-                <li><a href="/blog" data-translate="blog">Blog</a></li>
-                <li><a href="/multimedia" data-translate="multimedia">Multimedia</a></li>
-                <li><a href="/about" data-translate="about">Sobre mí</a></li>
-                <li><a href="/contact" data-translate="contact">Contacto</a></li>
-                <li class="mobile-only"><a href="#" id="mobile-lang-toggle">EN</a></li>
-            </ul>
-        </nav>
-        <div class="controls">
-            <button id="lang-toggle" class="desktop-only" aria-label="Toggle Language">EN</button>
-            <button id="theme-toggle" aria-label="Toggle Dark Mode">
-                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="5" />
-                    <line x1="12" y1="1" x2="12" y2="3" />
-                    <line x1="12" y1="21" x2="12" y2="23" />
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                    <line x1="1" y1="12" x2="3" y2="12" />
-                    <line x1="21" y1="12" x2="23" y2="12" />
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                </svg>
-                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    style="display:none;">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-            </button>
-            <button id="menu-toggle" aria-label="Toggle Menu" class="mobile-only">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="3" y1="12" x2="21" y2="12" />
-                    <line x1="3" y1="6" x2="21" y2="6" />
-                    <line x1="3" y1="18" x2="21" y2="18" />
-                </svg>
-            </button>
+  <div class="bg-canvas" aria-hidden="true">
+    <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+  </div>
+  <nav>
+    <a href="/" class="nav-logo">N</a>
+    <ul class="nav-links">
+      <li><a href="/" data-translate="home">Inicio</a></li>
+      <li><a href="/about" class="active" data-translate="about">Sobre mí</a></li>
+      <li><a href="/multimedia" data-translate="multimedia">Galería</a></li>
+      <li><a href="/blog" data-translate="blog">Blog</a></li>
+      <li><a href="/contact" data-translate="contact">Contacto</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="lang-btn" id="lang-toggle">EN</button>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Tema"></button>
+      <button class="hamburger" id="hamburger" aria-label="Menú"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/" data-translate="home">Inicio</a>
+    <a href="/about" data-translate="about">Sobre mí</a>
+    <a href="/multimedia" data-translate="multimedia">Galería</a>
+    <a href="/blog" data-translate="blog">Blog</a>
+    <a href="/contact" data-translate="contact">Contacto</a>
+    <button class="lang-btn" id="mobile-lang-toggle">EN</button>
+  </div>
+
+  <main>
+    <div class="about-grid">
+      <div class="about-left">
+        <span class="page-label" data-translate="about">Sobre mí</span>
+        <h1 class="about-title">Nocti<br>philus.</h1>
+        <div class="about-divider"></div>
+        <div class="about-text">
+          <p data-translate="about_p1">Soy un creador enfocado en la simplicidad y el diseño nocturno. Busco la elegancia en la ausencia de luz y la claridad en el espacio negativo.</p>
+          <p data-translate="about_p2">NOCTIPHILUS es mi canvas personal donde exploro estas ideas a través de imágenes, escritura y diseño.</p>
+          <p data-translate="about_p3">Creo en que menos siempre es más, y en que el silencio visual tiene tanto peso como el ruido.</p>
         </div>
-    </header>
-
-    <main>
-        <div class="content-container">
-            <h1 class="page-title" data-translate="about_title">Sobre mí</h1>
-
-            <div style="margin-bottom: 2rem;">
-                <p data-translate="about_p1">Soy un creador enfocado en la simplicidad y el diseño nocturno. Busco la
-                    elegancia en la ausencia de
-                    luz y la claridad en el espacio negativo.</p>
-                <p data-translate="about_p2"><b>NOCTIPHILUS</b> es mi canvas personal donde exploro estas ideas.</p>
-            </div>
-
-            <div
-                style="width: 150px; height: 150px; border-radius: 50%; border: 1px solid var(--text-color); margin: 0 auto; display: flex; align-items: center; justify-content: center; opacity: 0.5;">
-                PHOTO
-            </div>
+      </div>
+      <div class="about-right">
+        <div class="stat-item">
+          <div class="stat-number">2024</div>
+          <div class="stat-label" data-translate="stat_since">Desde</div>
         </div>
-    </main>
+        <div class="stat-item">
+          <div class="stat-number">∞</div>
+          <div class="stat-label" data-translate="stat_projects">Proyectos en curso</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">01</div>
+          <div class="stat-label" data-translate="stat_focus">Obsesión: la noche</div>
+        </div>
+      </div>
+    </div>
+  </main>
 
-    <script src="../script.js"></script>
+  <script>
+    const translations = {
+      es: { home:"Inicio", about:"Sobre mí", multimedia:"Galería", blog:"Blog", contact:"Contacto", toggleLang:"EN",
+        about_p1:"Soy un creador enfocado en la simplicidad y el diseño nocturno. Busco la elegancia en la ausencia de luz y la claridad en el espacio negativo.",
+        about_p2:"NOCTIPHILUS es mi canvas personal donde exploro estas ideas a través de imágenes, escritura y diseño.",
+        about_p3:"Creo en que menos siempre es más, y en que el silencio visual tiene tanto peso como el ruido.",
+        stat_since:"Desde", stat_projects:"Proyectos en curso", stat_focus:"Obsesión: la noche" },
+      en: { home:"Home", about:"About Me", multimedia:"Gallery", blog:"Blog", contact:"Contact", toggleLang:"ES",
+        about_p1:"I'm a creator focused on simplicity and nocturnal design. I seek elegance in the absence of light and clarity in negative space.",
+        about_p2:"NOCTIPHILUS is my personal canvas where I explore these ideas through images, writing and design.",
+        about_p3:"I believe less is always more, and that visual silence carries as much weight as noise.",
+        stat_since:"Since", stat_projects:"Ongoing projects", stat_focus:"Obsession: the night" }
+    };
+    let currentLang = localStorage.getItem('lang') || 'es';
+    function setLanguage(lang) {
+      currentLang = lang; document.documentElement.lang = lang; localStorage.setItem('lang', lang);
+      document.querySelectorAll('[data-translate]').forEach(el => { const k = el.getAttribute('data-translate'); if (translations[lang]?.[k]) el.textContent = translations[lang][k]; });
+      document.getElementById('lang-toggle').textContent = translations[lang].toggleLang;
+      const mob = document.getElementById('mobile-lang-toggle'); if (mob) mob.textContent = translations[lang].toggleLang;
+    }
+    function toggleLanguage() { setLanguage(currentLang === 'es' ? 'en' : 'es'); }
+    document.getElementById('lang-toggle').addEventListener('click', toggleLanguage);
+    document.getElementById('mobile-lang-toggle')?.addEventListener('click', toggleLanguage);
+    const html = document.documentElement;
+    html.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+    document.getElementById('theme-toggle').addEventListener('click', () => { const n = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light'; html.setAttribute('data-theme', n); localStorage.setItem('theme', n); });
+    const hamburger = document.getElementById('hamburger'); const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); mobileMenu.classList.toggle('open'); });
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { hamburger.classList.remove('open'); mobileMenu.classList.remove('open'); }));
+    setLanguage(currentLang);
+  </script>
 </body>
-
 </html>
