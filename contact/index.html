@@ -1,83 +1,188 @@
 <!DOCTYPE html>
-<html lang="es">
-
+<html lang="es" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contacto - NOCTIPHILUS</title>
-    <link rel="stylesheet" href="../style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contacto — NOCTIPHILUS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #ffffff; --fg: #0a0a0a; --muted: #888; --nav-bg: rgba(255,255,255,0.75); --border: rgba(0,0,0,0.08); --g1: rgba(210,210,220,0.45); --g2: rgba(180,190,210,0.3); --g3: rgba(220,215,210,0.35); --transition: 0.4s cubic-bezier(0.4,0,0.2,1); }
+    [data-theme="dark"] { --bg: #080808; --fg: #f0f0f0; --muted: #999; --nav-bg: rgba(8,8,8,0.82); --border: rgba(255,255,255,0.07); --g1: rgba(30,30,45,0.8); --g2: rgba(20,25,40,0.7); --g3: rgba(35,28,38,0.8); }
+    html, body { min-height: 100%; font-family: 'Jost', sans-serif; background: var(--bg); color: var(--fg); transition: background var(--transition), color var(--transition); overflow-x: hidden; }
+    .bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .orb { position: absolute; border-radius: 50%; filter: blur(80px); }
+    .orb-1 { width: 55vw; height: 55vw; top: -15%; left: -10%; background: radial-gradient(circle, var(--g1) 0%, transparent 70%); animation: drift1 18s ease-in-out infinite alternate; }
+    .orb-2 { width: 45vw; height: 45vw; bottom: -10%; right: -5%; background: radial-gradient(circle, var(--g2) 0%, transparent 70%); animation: drift2 22s ease-in-out infinite alternate; }
+    .orb-3 { width: 35vw; height: 35vw; top: 40%; left: 55%; background: radial-gradient(circle, var(--g3) 0%, transparent 70%); animation: drift3 15s ease-in-out infinite alternate; }
+    @keyframes drift1 { from { transform: translate(0,0) scale(1); } to { transform: translate(8vw,6vh) scale(1.08); } }
+    @keyframes drift2 { from { transform: translate(0,0) scale(1); } to { transform: translate(-6vw,-8vh) scale(1.05); } }
+    @keyframes drift3 { from { transform: translate(0,0) scale(1); } to { transform: translate(-5vw,5vh) scale(0.95); } }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(1.5rem,5vw,4rem); height: 60px; background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); transition: background var(--transition), border-color var(--transition); }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 1rem; letter-spacing: 0.35em; color: var(--fg); text-decoration: none; opacity: 0.5; transition: opacity 0.3s; }
+    .nav-logo:hover { opacity: 1; }
+    .nav-links { display: flex; list-style: none; gap: clamp(1.2rem,3vw,2.5rem); }
+    .nav-links a { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; color: var(--muted); font-weight: 300; transition: color 0.3s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--fg); }
+    .nav-right { display: flex; align-items: center; gap: 1rem; }
+    .lang-btn { background: none; border: none; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); font-weight: 300; padding: 0; transition: color 0.3s; }
+    .lang-btn:hover { color: var(--fg); }
+    .theme-toggle { width: 36px; height: 20px; background: transparent; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; position: relative; transition: border-color 0.3s; outline: none; flex-shrink: 0; }
+    .theme-toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--muted); transition: transform 0.3s, background 0.3s; }
+    [data-theme="dark"] .theme-toggle::after { transform: translateX(16px); background: var(--fg); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 1px; background: var(--fg); transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+    .mobile-menu { display: none; position: fixed; top: 60px; left: 0; right: 0; background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 1.5rem clamp(1.5rem,5vw,4rem); z-index: 99; flex-direction: column; gap: 1.2rem; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a, .mobile-menu button { font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; color: var(--muted); font-weight: 300; transition: color 0.3s; background: none; border: none; cursor: pointer; font-family: 'Jost', sans-serif; padding: 0; text-align: left; }
+    .mobile-menu a:hover { color: var(--fg); }
+    @media (max-width: 680px) { .nav-links, .lang-btn { display: none; } .hamburger { display: flex; } }
+
+    /* PAGE */
+    main { position: relative; z-index: 1; min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 100px clamp(1.5rem,8vw,8rem) 4rem; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 6rem; align-items: start; max-width: 1000px; width: 100%; animation: fadeUp 1s cubic-bezier(0.4,0,0.2,1) both; }
+    .contact-left { padding-top: 0.5rem; }
+    .page-label { font-size: 0.62rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--muted); font-weight: 200; display: block; margin-bottom: 1.5rem; }
+    .contact-title { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(2.5rem,5vw,4rem); letter-spacing: 0.1em; color: var(--fg); line-height: 1; margin-bottom: 2rem; }
+    .contact-divider { width: 30px; height: 1px; background: var(--muted); opacity: 0.35; margin-bottom: 2rem; }
+    .contact-desc { font-size: 0.8rem; line-height: 1.9; color: var(--muted); font-weight: 300; margin-bottom: 2.5rem; }
+    .contact-direct { display: flex; flex-direction: column; gap: 1rem; }
+    .contact-link { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; color: var(--muted); font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 300; transition: color 0.3s; }
+    .contact-link:hover { color: var(--fg); }
+    .contact-link svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+
+    /* Form */
+    .contact-form { display: flex; flex-direction: column; gap: 0; }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .form-label { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); font-weight: 200; }
+    .form-input { background: transparent; border: none; border-bottom: 1px solid var(--border); padding: 0.6rem 0; color: var(--fg); font-family: 'Jost', sans-serif; font-size: 0.85rem; font-weight: 300; outline: none; transition: border-color 0.3s; width: 100%; }
+    .form-input:focus { border-bottom-color: var(--fg); }
+    textarea.form-input { resize: none; min-height: 100px; }
+    .form-submit { margin-top: 1rem; background: none; border: 1px solid var(--border); padding: 0.9rem 2rem; font-family: 'Jost', sans-serif; font-size: 0.68rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); cursor: pointer; transition: all 0.3s; align-self: flex-start; }
+    .form-submit:hover { border-color: var(--fg); color: var(--fg); }
+    .form-submit.sending { opacity: 0.5; pointer-events: none; }
+    .form-success { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-top: 1rem; display: none; }
+    .form-success.visible { display: block; }
+
+    @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; gap: 3rem; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
 </head>
-
 <body>
-    <header>
-        <nav>
-            <ul id="menu">
-                <li><a href="/" data-translate="home">Inicio</a></li>
-                <li><a href="/blog" data-translate="blog">Blog</a></li>
-                <li><a href="/multimedia" data-translate="multimedia">Multimedia</a></li>
-                <li><a href="/about" data-translate="about">Sobre mí</a></li>
-                <li><a href="/contact" data-translate="contact">Contacto</a></li>
-                <li class="mobile-only"><a href="#" id="mobile-lang-toggle">EN</a></li>
-            </ul>
-        </nav>
-        <div class="controls">
-            <button id="lang-toggle" class="desktop-only" aria-label="Toggle Language">EN</button>
-            <button id="theme-toggle" aria-label="Toggle Dark Mode">
-                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="5" />
-                    <line x1="12" y1="1" x2="12" y2="3" />
-                    <line x1="12" y1="21" x2="12" y2="23" />
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                    <line x1="1" y1="12" x2="3" y2="12" />
-                    <line x1="21" y1="12" x2="23" y2="12" />
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                </svg>
-                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    style="display:none;">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-            </button>
-            <button id="menu-toggle" aria-label="Toggle Menu" class="mobile-only">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="3" y1="12" x2="21" y2="12" />
-                    <line x1="3" y1="6" x2="21" y2="6" />
-                    <line x1="3" y1="18" x2="21" y2="18" />
-                </svg>
-            </button>
+  <div class="bg-canvas" aria-hidden="true">
+    <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+  </div>
+  <nav>
+    <a href="/" class="nav-logo">N</a>
+    <ul class="nav-links">
+      <li><a href="/" data-translate="home">Inicio</a></li>
+      <li><a href="/about" data-translate="about">Sobre mí</a></li>
+      <li><a href="/multimedia" data-translate="multimedia">Galería</a></li>
+      <li><a href="/blog" data-translate="blog">Blog</a></li>
+      <li><a href="/contact" class="active" data-translate="contact">Contacto</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="lang-btn" id="lang-toggle">EN</button>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Tema"></button>
+      <button class="hamburger" id="hamburger" aria-label="Menú"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/" data-translate="home">Inicio</a>
+    <a href="/about" data-translate="about">Sobre mí</a>
+    <a href="/multimedia" data-translate="multimedia">Galería</a>
+    <a href="/blog" data-translate="blog">Blog</a>
+    <a href="/contact" data-translate="contact">Contacto</a>
+    <button class="lang-btn" id="mobile-lang-toggle">EN</button>
+  </div>
+
+  <main>
+    <div class="contact-grid">
+      <div class="contact-left">
+        <span class="page-label" data-translate="contact">Contacto</span>
+        <h1 class="contact-title" data-translate="contact_title">Hablemos.</h1>
+        <div class="contact-divider"></div>
+        <p class="contact-desc" data-translate="contact_desc">Si tienes alguna pregunta, colaboración o simplemente quieres saludar, escríbeme.</p>
+        <div class="contact-direct">
+          <a class="contact-link" href="https://instagram.com/noctiphilus" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.334 3.608 1.308.975.975 1.246 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.334 2.633-1.308 3.608-.975.975-2.242 1.246-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.334-3.608-1.308-.975-.975-1.246-2.242-1.308-3.608C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.062-1.366.334-2.633 1.308-3.608.975-.975 2.242-1.246 3.608-1.308C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.333.014 7.053.072 5.197.157 3.355.673 2.014 2.014.673 3.355.157 5.197.072 7.053.014 8.333 0 8.741 0 12c0 3.259.014 3.667.072 4.947.085 1.856.601 3.698 1.942 5.039 1.341 1.341 3.183 1.857 5.039 1.942C8.333 23.986 8.741 24 12 24s3.667-.014 4.947-.072c1.856-.085 3.698-.601 5.039-1.942 1.341-1.341 1.857-3.183 1.942-5.039.058-1.28.072-1.688.072-4.947 0-3.259-.014-3.667-.072-4.947-.085-1.856-.601-3.698-1.942-5.039C20.645.673 18.803.157 16.947.072 15.667.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324A6.162 6.162 0 0 0 12 5.838zm0 10.162a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+            @noctiphilus
+          </a>
+          <a class="contact-link" href="https://x.com/noctiphilus" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            @noctiphilus
+          </a>
         </div>
-    </header>
+      </div>
 
-    <main>
-        <div class="content-container">
-            <h1 class="page-title" data-translate="contact_title">Contacto</h1>
-
-            <form class="contact-form" onsubmit="event.preventDefault(); alert('Mensaje enviado (simulación)');">
-                <div class="input-group">
-                    <label data-translate="contact_email">Email</label>
-                    <input type="email" placeholder="tu@email.com" data-translate="contact_email_ph" required>
-                </div>
-
-                <div class="input-group">
-                    <label data-translate="contact_msg">Mensaje</label>
-                    <textarea rows="5" placeholder="Escribe tu mensaje aquí..." data-translate="contact_msg_ph"
-                        required></textarea>
-                </div>
-
-                <button type="submit" class="submit-btn" style="cursor: pointer;"
-                    data-translate="contact_send">Enviar</button>
-            </form>
+      <div class="contact-form" id="contactForm">
+        <div class="form-group">
+          <label class="form-label" for="inputEmail" data-translate="form_email">Email</label>
+          <input class="form-input" type="email" id="inputEmail" placeholder="tu@email.com" />
         </div>
-    </main>
+        <div class="form-group">
+          <label class="form-label" for="inputSubject" data-translate="form_subject">Asunto</label>
+          <input class="form-input" type="text" id="inputSubject" placeholder="..." />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="inputMessage" data-translate="form_message">Mensaje</label>
+          <textarea class="form-input" id="inputMessage" rows="4" placeholder="..."></textarea>
+        </div>
+        <button class="form-submit" id="formSubmit" data-translate="form_send">Enviar</button>
+        <span class="form-success" id="formSuccess" data-translate="form_sent">Mensaje enviado.</span>
+      </div>
+    </div>
+  </main>
 
-    <script src="../script.js"></script>
+  <script>
+    const translations = {
+      es: { home:"Inicio", about:"Sobre mí", multimedia:"Galería", blog:"Blog", contact:"Contacto", toggleLang:"EN",
+        contact_title:"Hablemos.", contact_desc:"Si tienes alguna pregunta, colaboración o simplemente quieres saludar, escríbeme.",
+        form_email:"Email", form_subject:"Asunto", form_message:"Mensaje", form_send:"Enviar", form_sent:"Mensaje enviado." },
+      en: { home:"Home", about:"About Me", multimedia:"Gallery", blog:"Blog", contact:"Contact", toggleLang:"ES",
+        contact_title:"Let's talk.", contact_desc:"If you have a question, a collaboration proposal, or just want to say hello — write to me.",
+        form_email:"Email", form_subject:"Subject", form_message:"Message", form_send:"Send", form_sent:"Message sent." }
+    };
+    let currentLang = localStorage.getItem('lang') || 'es';
+    function setLanguage(lang) {
+      currentLang = lang; document.documentElement.lang = lang; localStorage.setItem('lang', lang);
+      document.querySelectorAll('[data-translate]').forEach(el => { const k = el.getAttribute('data-translate'); if (translations[lang]?.[k]) el.textContent = translations[lang][k]; });
+      document.getElementById('lang-toggle').textContent = translations[lang].toggleLang;
+      const mob = document.getElementById('mobile-lang-toggle'); if (mob) mob.textContent = translations[lang].toggleLang;
+    }
+    function toggleLanguage() { setLanguage(currentLang === 'es' ? 'en' : 'es'); }
+    document.getElementById('lang-toggle').addEventListener('click', toggleLanguage);
+    document.getElementById('mobile-lang-toggle')?.addEventListener('click', toggleLanguage);
+    const html = document.documentElement;
+    html.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+    document.getElementById('theme-toggle').addEventListener('click', () => { const n = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light'; html.setAttribute('data-theme', n); localStorage.setItem('theme', n); });
+    const hamburger = document.getElementById('hamburger'); const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); mobileMenu.classList.toggle('open'); });
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { hamburger.classList.remove('open'); mobileMenu.classList.remove('open'); }));
+    setLanguage(currentLang);
+
+    // Simple mailto form
+    document.getElementById('formSubmit').addEventListener('click', () => {
+      const email = document.getElementById('inputEmail').value.trim();
+      const subject = document.getElementById('inputSubject').value.trim();
+      const message = document.getElementById('inputMessage').value.trim();
+      if (!email || !message) return;
+      const btn = document.getElementById('formSubmit');
+      btn.classList.add('sending');
+      window.location.href = `mailto:noctiphilus@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message + '\n\nDe: ' + email)}`;
+      setTimeout(() => {
+        btn.classList.remove('sending');
+        document.getElementById('formSuccess').classList.add('visible');
+        document.getElementById('inputEmail').value = '';
+        document.getElementById('inputSubject').value = '';
+        document.getElementById('inputMessage').value = '';
+      }, 800);
+    });
+  </script>
 </body>
-
 </html>
